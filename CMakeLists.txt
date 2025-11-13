@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.30.0)
+
+project(vulkan)
+
+add_executable(vulkan 
+    src/main.cpp
+    src/base.cpp
+    src/triangle.cpp
+)
+
+find_package(glfw3 CONFIG REQUIRED)
+    target_link_libraries(vulkan PRIVATE glfw)
+
+find_package(glm CONFIG REQUIRED)
+    target_link_libraries(vulkan PRIVATE glm::glm)
+
+find_package(Vulkan REQUIRED)
+    target_link_libraries(vulkan PRIVATE Vulkan::Vulkan)
+
+target_include_directories(vulkan PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+)
