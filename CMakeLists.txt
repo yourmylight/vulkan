@@ -20,3 +20,7 @@ find_package(Vulkan REQUIRED)
 target_include_directories(vulkan PRIVATE
     ${PROJECT_SOURCE_DIR}/include
 )
+
+target_precompile_headers(vulkan PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+)

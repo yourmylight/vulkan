@@ -6,12 +6,17 @@
 class Base {
 public:
     Base() = default;
-    void prepare();
+    virtual void prepare();
     void initVulkan();
+    void setupWindow();
     virtual void run() = 0;
+    virtual void renderLoop() = 0;
     virtual ~Base();
 private:
 
+protected:
+    GLFWwindow* window = nullptr;
+    int width = 800, height = 600;
 };
 
 #endif

@@ -9,6 +9,8 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
+#include <vulkan/vulkan.h>
+
 #include <stdexcept>
 #include <cstdlib>
 

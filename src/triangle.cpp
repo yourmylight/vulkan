@@ -1,27 +1,20 @@
 #include <triangle.h>
 
 void Triangle::run() {
-    glfwInit();
+    Base::setupWindow();
+    Base::initVulkan();
+    prepare();
+    renderLoop();
+}
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
+void Triangle::prepare() {
+    Base::prepare();
+}
 
-    uint32_t extensionCount = 0;
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-    std::cout << extensionCount << " extensions supported" << std::endl;
-
-    glm::mat4 matrix;
-    glm::vec4 vec;
-    auto test = matrix * vec;
-
-    while(!glfwWindowShouldClose(window)) {
+void Triangle::renderLoop() {
+    while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
     }
-
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
 }
 
 Triangle::~Triangle() {
