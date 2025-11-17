@@ -9,7 +9,7 @@ public:
     void run() override;
     void prepare() override;
     void renderLoop() override;
-    virtual ~Triangle();
+    virtual ~Triangle() override;
 };
 
 #endif
