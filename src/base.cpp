@@ -53,7 +53,6 @@ void Base::setupWindow() {
 
     window = glfwCreateWindow(width, height, "Hello, Vulkan", nullptr, nullptr);
     if (window == nullptr) {
-        glfwTerminate();
         throw std::runtime_error("failed to create GLFW window");
     }
 }

@@ -1,16 +1,14 @@
 #include <triangle.h>
 
 int main(int argc, char* argv[]) {
-    Base* app = new Triangle();
+    auto app = std::make_unique<Triangle>(1280, 720);
     
     try {
         app->run();
     } catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
-        delete app;
         return EXIT_FAILURE;
     }
-    delete app;
 
     return 0;
 }

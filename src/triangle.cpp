@@ -10,6 +10,10 @@ void Triangle::renderLoop() {
     }
 }
 
+Triangle::Triangle(int _width, int _height) : Base(_width, _height) {
+    
+}
+
 Triangle::~Triangle() {
     
 }
