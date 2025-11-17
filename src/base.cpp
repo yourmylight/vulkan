@@ -11,7 +11,6 @@ void Base::initVulkan() {
 void Base::createInstance() {
     uint32_t supportVersion = VK_API_VERSION_1_0;
     if (vkEnumerateInstanceVersion(&supportVersion) != VK_SUCCESS) {
-        glfwTerminate();
         throw std::runtime_error("failed enumerate vulkan instance version");
     }
 
@@ -28,7 +27,6 @@ void Base::createInstance() {
     uint32_t extensionCount = 0;
     const char** extensionNames = glfwGetRequiredInstanceExtensions(&extensionCount);
     if (extensionNames == nullptr && extensionCount > 0) {
-        glfwTerminate();
         throw std::runtime_error("failed glfw get required extensions");
     }
 
@@ -41,7 +39,6 @@ void Base::createInstance() {
     createInfo.enabledLayerCount = 0;
 
     if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
-        glfwTerminate();
         throw std::runtime_error("failed to create instance");
     }
 }
