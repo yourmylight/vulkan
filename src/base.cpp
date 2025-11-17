@@ -58,6 +58,13 @@ void Base::setupWindow() {
     }
 }
 
+void Base::run() {
+    setupWindow();
+    initVulkan();
+    prepare();
+    renderLoop();
+}
+
 Base::Base(int _width, int _height) : width(_width), height(_height) {
 
 }

@@ -5,13 +5,12 @@
 
 class Base {
 public:
-    Base() = default;
-    Base(int _width, int _height);
+    Base(int _width = 800, int _height = 600);
     virtual void prepare();
     void initVulkan();
     void setupWindow();
     void createInstance();
-    virtual void run() = 0;
+    void run();
     virtual void renderLoop() = 0;
     virtual ~Base();
 protected:
