@@ -80,6 +80,9 @@ protected:
     VkPhysicalDevice physicalDevice{};
 
     VkDevice logicalDevice{};
+
+    VkQueue graphicQueue{};
+    VkQueue presentQueue{};
 private:
 #ifdef NDEBUG
     constexpr static bool enableValidationLayers = false;
