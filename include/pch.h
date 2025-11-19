@@ -11,6 +11,7 @@
 
 #include <vulkan/vulkan.h>
 
+#include <optional>
 #include <memory>
 #include <stdexcept>
 #include <cstdlib>

@@ -1,5 +1,36 @@
 #include <base.h>
 
+void Base::run() {
+    setupWindow();
+    initVulkan();
+    prepare();
+    renderLoop();
+}
+
+Base::Base(int _width, int _height) : width(_width), height(_height) {
+
+}
+
+Base::~Base() {
+    if (logicalDevice != VK_NULL_HANDLE) {
+        vkDestroyDevice(logicalDevice, nullptr);
+    }
+    if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE) {
+        DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+    }
+    if (surface != VK_NULL_HANDLE) {
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+    }
+    if (instance != VK_NULL_HANDLE) {
+        vkDestroyInstance(instance, nullptr);
+    }
+    if (window != nullptr) {
+        glfwDestroyWindow(window);
+    }
+    
+    glfwTerminate();
+}
+
 void Base::prepare() {
     
 }
@@ -7,10 +38,27 @@ void Base::prepare() {
 void Base::initVulkan() {
     createInstance();
     setupDebugMessenger();
+    createSurface();
+    pickPhysicalDevice();
+    createLogicDevice();
+}
+
+void Base::setupWindow() {
+    if (!glfwInit()) {
+        throw std::runtime_error("failed to initialize GLFW");
+    }
+
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+    window = glfwCreateWindow(width, height, "Vulkan Engine", nullptr, nullptr);
+    if (window == nullptr) {
+        throw std::runtime_error("failed to create GLFW window");
+    }
 }
 
 void Base::createInstance() {
-    uint32_t supportVersion = VK_API_VERSION_1_0;
+    uint32_t supportVersion = VK_API_VERSION_1_1;
     if (vkEnumerateInstanceVersion(&supportVersion) != VK_SUCCESS) {
         throw std::runtime_error("failed to enumerate vulkan instance version");
     }
@@ -76,7 +124,7 @@ void Base::createInstance() {
         createInfo.ppEnabledLayerNames = validationLayers.data();
 
         populateDebugMessengerCreateInfo(debugCreateInfo);
-        createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+        createInfo.pNext = static_cast<VkDebugUtilsMessengerCreateInfoEXT*>(&debugCreateInfo);
     } else {
         createInfo.enabledLayerCount = 0;
     }
@@ -95,6 +143,101 @@ void Base::setupDebugMessenger() {
     if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
         throw std::runtime_error("failed to create debug messenger");
     }
+}
+
+void Base::createSurface() {
+    if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create window surface");
+    }
+}
+
+void Base::pickPhysicalDevice() {
+    uint32_t physicalDeviceCount = 0;
+    if (vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr) != VK_SUCCESS) {
+        throw std::runtime_error("failed to enumerate physical device");
+    }
+    if (!physicalDeviceCount) {
+        throw std::runtime_error("failed to find gpu with Vulkan support");
+    }
+    std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
+    if (vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, physicalDevices.data()) != VK_SUCCESS) {
+        throw std::runtime_error("failed to enumerate physical device");
+    }
+    for (const VkPhysicalDevice& device : physicalDevices) {
+        if (checkPhysicalDevice(device)) {
+            physicalDevice = device;
+            break;
+        }
+    }
+    if (physicalDevice == VK_NULL_HANDLE) {
+        throw std::runtime_error("failed to pick physical device");
+    }
+}
+
+void Base::createLogicDevice() {
+    QueueFamilyIndices queueFamilyIndices = findQueueFamily(physicalDevice);
+
+    const float priority = 1.0f;
+    VkDeviceQueueCreateInfo queueCreateInfo {
+        .sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+        .pNext = nullptr,
+        .queueFamilyIndex = queueFamilyIndices.graphicFamily.value(),
+        .queueCount = 1,
+        .pQueuePriorities = &priority
+    };
+    
+    VkDeviceCreateInfo deviceCreateInfo {
+        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .pNext = nullptr,
+        .queueCreateInfoCount = 1,
+        .pQueueCreateInfos = &queueCreateInfo
+    };
+    if (enableValidationLayers) {
+        deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+        deviceCreateInfo.ppEnabledLayerNames = validationLayers.data();
+    } else {
+        deviceCreateInfo.enabledLayerCount = 0;
+    }
+
+    if (vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &logicalDevice) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create logical device");
+    }
+}
+
+bool Base::checkPhysicalDevice(const VkPhysicalDevice& device) {
+    QueueFamilyIndices queueFamilyIndices = findQueueFamily(device);
+
+    return queueFamilyIndices.isComplete();
+}
+
+Base::QueueFamilyIndices Base::findQueueFamily(const VkPhysicalDevice& device) {
+    QueueFamilyIndices queueFamilyIndices{};
+
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties2(device, &queueFamilyCount, nullptr);
+    if (queueFamilyCount > 0) {
+        std::vector<VkQueueFamilyProperties2> queueFamilyProperties2(queueFamilyCount);
+        for (uint32_t i = 0; i < queueFamilyCount; i++) {
+            queueFamilyProperties2[i].sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2;
+        }
+        vkGetPhysicalDeviceQueueFamilyProperties2(device, &queueFamilyCount, queueFamilyProperties2.data());
+
+        VkBool32 supported = false; 
+        for (uint32_t i = 0; i < queueFamilyCount; i++) {
+            if (queueFamilyProperties2[i].queueFamilyProperties.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+                queueFamilyIndices.graphicFamily = i;
+            }
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &supported);
+            if (supported) {
+                queueFamilyIndices.presentFamily = i;
+            }
+            if (queueFamilyIndices.isComplete()) {
+                break;
+            }
+        }
+    }
+
+    return queueFamilyIndices;
 }
 
 VKAPI_ATTR VkBool32 VKAPI_CALL Base::debugCallback(
@@ -147,44 +290,4 @@ void Base::DestroyDebugUtilsMessengerEXT(
     if (func != nullptr) {
         func(instance, debugMessenger, pAllocator);
     }
-}
-
-void Base::setupWindow() {
-    if (!glfwInit()) {
-        throw std::runtime_error("failed to initialize GLFW");
-    }
-
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-    window = glfwCreateWindow(width, height, "Vulkan Engine", nullptr, nullptr);
-    if (window == nullptr) {
-        throw std::runtime_error("failed to create GLFW window");
-    }
-}
-
-void Base::run() {
-    setupWindow();
-    initVulkan();
-    prepare();
-    renderLoop();
-}
-
-Base::Base(int _width, int _height) : width(_width), height(_height) {
-
-}
-
-Base::~Base() {
-    if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE) {
-        DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
-    }
-    if (instance != VK_NULL_HANDLE) {
-        vkDestroyInstance(instance, nullptr);
-    }
-
-    if (window != nullptr) {
-        glfwDestroyWindow(window);
-    }
-    
-    glfwTerminate();
 }
