@@ -80,7 +80,9 @@ Instance::Instance() {
 }
 
 Instance::~Instance() {
-
+    if (instance != VK_NULL_HANDLE) {
+        vkDestroyInstance(instance, nullptr);
+    }
 }
 
 VkInstance Instance::getInstance() const {
