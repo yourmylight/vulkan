@@ -1,8 +1,10 @@
 #pragma once
 
-#include <instance.h>
-#include <surface.h>
-#include <device.h>
+#include <pch.h>
+
+#include <core/instance.h>
+#include <core/surface.h>
+#include <core/device.h>
 
 class Base {
 public:

@@ -1,4 +1,4 @@
-#include <device.h>
+#include <core/device.h>
 #include <config.h>
 
 Device::Device(VkInstance _instance, VkSurfaceKHR _surface) :

@@ -4,14 +4,14 @@ project(vulkan)
 
 set(CMAKE_CXX_STANDARD 23)
 
+file(GLOB_RECURSE CORE_SOURCES "${PROJECT_SOURCE_DIR}/src/core/*.cpp")
+
 add_executable(vulkan 
     src/main.cpp
     src/base.cpp
     src/triangle.cpp
-    src/instance.cpp
     src/debugUtils.cpp
-    src/surface.cpp
-    src/device.cpp
+    ${CORE_SOURCES}
 )
 
 find_package(glfw3 CONFIG REQUIRED)
@@ -28,5 +28,5 @@ target_include_directories(vulkan PRIVATE
 )
 
 target_precompile_headers(vulkan PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+    ${PROJECT_SOURCE_DIR}/include/pch.h
 )
