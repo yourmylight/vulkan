@@ -1,3 +1,4 @@
+#include <pch.h>
 #include <base.h>
 #include <config.h>
 #include <debugUtils.h>

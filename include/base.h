@@ -1,7 +1,5 @@
 #pragma once
 
-#include <pch.h>
-
 #include <core/instance.h>
 #include <core/surface.h>
 #include <core/device.h>

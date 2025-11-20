@@ -1,6 +1,8 @@
 #pragma once
 
-#include <pch.h>
+#include <vulkan/vulkan.h>
+
+struct GLFWwindow;
 
 class Surface {
 public:
