@@ -11,6 +11,7 @@ add_executable(vulkan
     src/instance.cpp
     src/debugUtils.cpp
     src/surface.cpp
+    src/device.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)

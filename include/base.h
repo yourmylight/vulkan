@@ -2,17 +2,9 @@
 
 #include <instance.h>
 #include <surface.h>
+#include <device.h>
 
 class Base {
-public:
-    struct QueueFamilyIndices {
-        std::optional<uint32_t> graphicFamily;
-        std::optional<uint32_t> presentFamily;
-
-        bool isComplete() {
-            return graphicFamily.has_value() && presentFamily.has_value();
-        }
-    };
 public:
     Base(int _width = 800, int _height = 600);
 
@@ -30,34 +22,20 @@ public:
 
     void createInstance();
 
-    void createSurface();
-
     void setupDebugMessenger();
 
-    void pickPhysicalDevice();
+    void createSurface();
 
-    void createLogicDevice();
-
-    bool checkPhysicalDevice(const VkPhysicalDevice& device);
-
-    QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
+    void createDevice();
 protected:
     GLFWwindow* window = nullptr;
     int width = 800, height = 600;
-
-    // VkInstance instance{};
-    // uint32_t targetVersion = VK_API_VERSION_1_1;
 
     std::unique_ptr<Instance> instance;
 
     std::unique_ptr<Surface> surface;
 
-    VkPhysicalDevice physicalDevice{};
-
-    VkDevice logicalDevice{};
-
-    VkQueue graphicQueue{};
-    VkQueue presentQueue{};
+    std::unique_ptr<Device> device;
 private:
     VkDebugUtilsMessengerEXT debugMessenger{};
 };
