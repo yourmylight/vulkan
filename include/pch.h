@@ -1,5 +1,4 @@
-#ifndef PCH_H
-#define PCH_H
+#pragma once
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -25,5 +24,3 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <queue>
-
-#endif

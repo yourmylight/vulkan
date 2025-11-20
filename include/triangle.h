@@ -1,5 +1,4 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#pragma once
 
 #include <base.h>
 
@@ -10,5 +9,3 @@ public:
     void renderLoop() override;
     virtual ~Triangle() override;
 };
-
-#endif

@@ -1,7 +1,6 @@
-#ifndef BASE_H
-#define BASE_H
+#pragma once
 
-#include <pch.h>
+#include <instance.h>
 
 class Base {
 public:
@@ -37,43 +36,18 @@ public:
     void pickPhysicalDevice();
 
     void createLogicDevice();
-    
-    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
-        VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-        VkDebugUtilsMessageTypeFlagsEXT messageType,
-        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-        void* pUserData
-    );
-
-    VkResult CreateDebugUtilsMessengerEXT(
-        VkInstance instance, 
-        const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
-        const VkAllocationCallbacks* pAllocator, 
-        VkDebugUtilsMessengerEXT* pDebugMessenger
-    );
-
-    void DestroyDebugUtilsMessengerEXT(
-        VkInstance instance, 
-        VkDebugUtilsMessengerEXT debugMessenger, 
-        const VkAllocationCallbacks* pAllocator
-    );
-
-    void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
     bool checkPhysicalDevice(const VkPhysicalDevice& device);
 
     QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
-    
-private:
-    const std::vector<const char*> validationLayers = {
-        "VK_LAYER_KHRONOS_validation"
-    };
 protected:
     GLFWwindow* window = nullptr;
     int width = 800, height = 600;
 
-    VkInstance instance{};
-    uint32_t targetVersion = VK_API_VERSION_1_1;
+    // VkInstance instance{};
+    // uint32_t targetVersion = VK_API_VERSION_1_1;
+
+    std::unique_ptr<Instance> instance;
 
     VkSurfaceKHR surface{};
 
@@ -84,12 +58,5 @@ protected:
     VkQueue graphicQueue{};
     VkQueue presentQueue{};
 private:
-#ifdef NDEBUG
-    constexpr static bool enableValidationLayers = false;
-#else
-    constexpr static bool enableValidationLayers = true;
-#endif
     VkDebugUtilsMessengerEXT debugMessenger{};
 };
-
-#endif

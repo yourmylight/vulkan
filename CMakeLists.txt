@@ -8,6 +8,8 @@ add_executable(vulkan
     src/main.cpp
     src/base.cpp
     src/triangle.cpp
+    src/instance.cpp
+    src/debugUtils.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)
