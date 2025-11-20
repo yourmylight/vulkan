@@ -10,6 +10,7 @@ add_executable(vulkan
     src/triangle.cpp
     src/instance.cpp
     src/debugUtils.cpp
+    src/surface.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)

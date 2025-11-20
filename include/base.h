@@ -1,6 +1,7 @@
 #pragma once
 
 #include <instance.h>
+#include <surface.h>
 
 class Base {
 public:
@@ -49,7 +50,7 @@ protected:
 
     std::unique_ptr<Instance> instance;
 
-    VkSurfaceKHR surface{};
+    std::unique_ptr<Surface> surface;
 
     VkPhysicalDevice physicalDevice{};
 

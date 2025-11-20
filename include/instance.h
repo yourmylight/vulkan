@@ -9,6 +9,6 @@ public:
 
     VkInstance getInstance() const;
 private:
-    VkInstance instance;
+    VkInstance instance{};
     uint32_t targetVersion = VK_API_VERSION_1_1;
 };

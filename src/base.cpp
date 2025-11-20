@@ -20,9 +20,7 @@ Base::~Base() {
     if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE) {
         DebugUtils::DestroyDebugUtilsMessengerEXT(instance->getInstance(), debugMessenger, nullptr);
     }
-    if (surface != VK_NULL_HANDLE) {
-        vkDestroySurfaceKHR(instance->getInstance(), surface, nullptr);
-    }
+    surface.reset();
     instance.reset();
     if (window != nullptr) {
         glfwDestroyWindow(window);
@@ -76,9 +74,7 @@ void Base::setupDebugMessenger() {
 }
 
 void Base::createSurface() {
-    if (glfwCreateWindowSurface(instance->getInstance(), window, nullptr, &surface) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create window surface");
-    }
+    surface = std::make_unique<Surface>(instance->getInstance(), window);
 }
 
 void Base::pickPhysicalDevice() {
@@ -114,14 +110,14 @@ void Base::createLogicDevice() {
 
     std::vector<VkDeviceQueueCreateInfo> deviceQueueCreateInfos(uniqueQueueFamilyIndices.size());
 
-    const float priority = 1.0f;
+    std::vector<float> priorities(uniqueQueueFamilyIndices.size(), 1.0f);
     uint32_t i = 0;
     for (const uint32_t index : uniqueQueueFamilyIndices) {
         deviceQueueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         deviceQueueCreateInfos[i].pNext = nullptr;
         deviceQueueCreateInfos[i].queueFamilyIndex = index;
         deviceQueueCreateInfos[i].queueCount = 1;
-        deviceQueueCreateInfos[i].pQueuePriorities = &priority;
+        deviceQueueCreateInfos[i].pQueuePriorities = &priorities[i];
         i++;
     }
 
@@ -170,7 +166,7 @@ Base::QueueFamilyIndices Base::findQueueFamily(const VkPhysicalDevice& device) {
                 queueFamilyIndices.graphicFamily = i;
             }
             supported = false;
-            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &supported);
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface->getSurface(), &supported);
             if (supported) {
                 queueFamilyIndices.presentFamily = i;
             }
