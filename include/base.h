@@ -1,8 +1,12 @@
 #pragma once
 
-#include <core/instance.h>
-#include <core/surface.h>
-#include <core/device.h>
+namespace core {
+    class Instance;
+    class Surface;
+    class Device;
+}
+
+struct GLFWwindow;
 
 class Base {
 public:
@@ -28,6 +32,10 @@ public:
 
     void createDevice();
 protected:
+    using Instance = core::Instance;
+    using Surface  = core::Surface;
+    using Device   = core::Device;
+    
     GLFWwindow* window = nullptr;
     int width = 800, height = 600;
 

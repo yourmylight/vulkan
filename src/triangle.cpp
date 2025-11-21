@@ -1,4 +1,4 @@
-#include <triangle.h>
+#include "triangle.h"
 
 void Triangle::prepare() {
     Base::prepare();

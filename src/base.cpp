@@ -1,7 +1,10 @@
-#include <pch.h>
-#include <base.h>
-#include <config.h>
-#include <debugUtils.h>
+#include "pch.h"
+#include "base.h"
+#include "config.h"
+#include "debugUtils.h"
+#include "core/instance.h"
+#include "core/surface.h"
+#include "core/device.h"
 
 void Base::run() {
     setupWindow();

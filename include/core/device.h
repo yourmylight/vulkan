@@ -2,37 +2,39 @@
 
 #include <vulkan/vulkan.h>
 
-class Device {
-public:
-struct QueueFamilyIndices {
-    std::optional<uint32_t> graphicFamily;
-    std::optional<uint32_t> presentFamily;
+namespace core {
+    class Device {
+    public:
+    struct QueueFamilyIndices {
+        std::optional<uint32_t> graphicFamily;
+        std::optional<uint32_t> presentFamily;
 
-    bool isComplete() {
-        return graphicFamily.has_value() && presentFamily.has_value();
-    }
-};
-public:
-    Device(VkInstance _instance, VkSurfaceKHR _surface);
+        bool isComplete() {
+            return graphicFamily.has_value() && presentFamily.has_value();
+        }
+    };
+    public:
+        Device(VkInstance _instance, VkSurfaceKHR _surface);
 
-    ~Device();
+        ~Device();
 
-    VkPhysicalDevice getPhysicalDevice() const;
+        VkPhysicalDevice getPhysicalDevice() const;
 
-    VkDevice getLogicalDevice() const;
-private:
-    void pickPhysicalDevice();
+        VkDevice getLogicalDevice() const;
+    private:
+        void pickPhysicalDevice();
 
-    void createLogicDevice();
+        void createLogicDevice();
 
-    bool checkPhysicalDevice(const VkPhysicalDevice& device);
+        bool checkPhysicalDevice(const VkPhysicalDevice& device);
 
-    QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
-private:
-    VkInstance instance{};
-    VkSurfaceKHR surface{};
-    VkPhysicalDevice physicalDevice{};
-    VkDevice logicalDevice{};
-    VkQueue graphicQueue{};
-    VkQueue presentQueue{};
-};
+        QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
+    private:
+        VkInstance instance{};
+        VkSurfaceKHR surface{};
+        VkPhysicalDevice physicalDevice{};
+        VkDevice logicalDevice{};
+        VkQueue graphicQueue{};
+        VkQueue presentQueue{};
+    };
+}

@@ -1,4 +1,4 @@
-#include <triangle.h>
+#include "triangle.h"
 
 int main(int argc, char* argv[]) {
     auto app = std::make_unique<Triangle>(1280, 720);
