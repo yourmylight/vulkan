@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "core/device.h"
+#include "core/swapchainSupportDetails.h"
 #include "config.h"
 
 namespace core {
@@ -72,7 +73,9 @@ namespace core {
             .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
             .pNext = nullptr,
             .queueCreateInfoCount = static_cast<uint32_t>(deviceQueueCreateInfos.size()),
-            .pQueueCreateInfos = deviceQueueCreateInfos.data()
+            .pQueueCreateInfos = deviceQueueCreateInfos.data(),
+            .enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size()),
+            .ppEnabledExtensionNames = deviceExtensions.data()
         };
         if (enableValidationLayers) {
             deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -92,10 +95,22 @@ namespace core {
     bool Device::checkPhysicalDevice(const VkPhysicalDevice& device) {
         QueueFamilyIndices queueFamilyIndices = findQueueFamily(device);
 
-        return queueFamilyIndices.isComplete();
+        bool extensionSupport = checkDeviceExtensionSupport(device);
+        bool swapchainAdequate = false;
+        if (extensionSupport) {
+            SwapchainSupportDetails swapchainSupportDetails = SwapchainSupportDetails::querySwapchainSupport(device, surface);
+            swapchainAdequate = 
+                !swapchainSupportDetails.formats.empty() && 
+                !swapchainSupportDetails.presentModes.empty();
+        }
+
+        return queueFamilyIndices.isComplete() && extensionSupport && swapchainAdequate;
     }
 
-    Device::QueueFamilyIndices Device::findQueueFamily(const VkPhysicalDevice& device) {
+    QueueFamilyIndices Device::findQueueFamily(const VkPhysicalDevice& device) {
+        if (this->queueFamilyIndices.isComplete()) {
+            return this->queueFamilyIndices;
+        }
         QueueFamilyIndices queueFamilyIndices{};
 
         uint32_t queueFamilyCount = 0;
@@ -122,7 +137,33 @@ namespace core {
                 }
             }
         }
+        this->queueFamilyIndices = queueFamilyIndices;
+        return queueFamilyIndices;
+    }
 
+    bool Device::checkDeviceExtensionSupport(const VkPhysicalDevice& device) {
+        uint32_t propertyCount = 0;
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &propertyCount, nullptr);
+        if (propertyCount) {
+            std::vector<VkExtensionProperties> extensionProperties(propertyCount);
+            vkEnumerateDeviceExtensionProperties(device, nullptr, &propertyCount, extensionProperties.data());
+            bool support = true;
+            for (const char* extension : deviceExtensions) {
+                auto it = find_if(extensionProperties.begin(), extensionProperties.end(),
+                [&extension](const VkExtensionProperties& extensionProperty) {
+                    return strcmp(extension, extensionProperty.extensionName) == 0;
+                });
+                if (it == extensionProperties.end()) {
+                    support = false;
+                    break;
+                }
+            }
+            return support;
+        }
+        return deviceExtensions.empty();
+    }
+
+    const QueueFamilyIndices& Device::getQueueFamilyIndices() const {
         return queueFamilyIndices;
     }
 }

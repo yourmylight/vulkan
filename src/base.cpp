@@ -5,6 +5,7 @@
 #include "core/instance.h"
 #include "core/surface.h"
 #include "core/device.h"
+#include "core/swapchain.h"
 
 void Base::run() {
     setupWindow();
@@ -18,6 +19,7 @@ Base::Base(int _width, int _height) : width(_width), height(_height) {
 }
 
 Base::~Base() {
+    swapchain.reset();
     device.reset();
     surface.reset();
     if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE && instance) {
@@ -40,6 +42,7 @@ void Base::initVulkan() {
     setupDebugMessenger();
     createSurface();
     createDevice();
+    createSwapchain();
 }
 
 void Base::setupWindow() {
@@ -80,4 +83,14 @@ void Base::createSurface() {
 
 void Base::createDevice() {
     device = std::make_unique<Device>(instance->getInstance(), surface->getSurface());
+}
+
+void Base::createSwapchain() {
+    swapchain = std::make_unique<Swapchain>(
+        window, 
+        device->getPhysicalDevice(), 
+        device->getLogicalDevice(), 
+        surface->getSurface(),
+        device->getQueueFamilyIndices()
+    );
 }

@@ -1,18 +1,10 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+#include "core/queueFamilyIndices.h"
 
 namespace core {
-    class Device {
-    public:
-    struct QueueFamilyIndices {
-        std::optional<uint32_t> graphicFamily;
-        std::optional<uint32_t> presentFamily;
-
-        bool isComplete() {
-            return graphicFamily.has_value() && presentFamily.has_value();
-        }
-    };
+    class Device {    
     public:
         Device(VkInstance _instance, VkSurfaceKHR _surface);
 
@@ -21,6 +13,7 @@ namespace core {
         VkPhysicalDevice getPhysicalDevice() const;
 
         VkDevice getLogicalDevice() const;
+        const QueueFamilyIndices& getQueueFamilyIndices() const;
     private:
         void pickPhysicalDevice();
 
@@ -29,6 +22,8 @@ namespace core {
         bool checkPhysicalDevice(const VkPhysicalDevice& device);
 
         QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
+
+        bool checkDeviceExtensionSupport(const VkPhysicalDevice& device);
     private:
         VkInstance instance{};
         VkSurfaceKHR surface{};
@@ -36,5 +31,6 @@ namespace core {
         VkDevice logicalDevice{};
         VkQueue graphicQueue{};
         VkQueue presentQueue{};
+        QueueFamilyIndices queueFamilyIndices{};
     };
 }

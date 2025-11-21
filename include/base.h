@@ -4,6 +4,7 @@ namespace core {
     class Instance;
     class Surface;
     class Device;
+    class Swapchain;
 }
 
 struct GLFWwindow;
@@ -31,10 +32,13 @@ public:
     void createSurface();
 
     void createDevice();
+
+    void createSwapchain();
 protected:
-    using Instance = core::Instance;
-    using Surface  = core::Surface;
-    using Device   = core::Device;
+    using Instance  = core::Instance;
+    using Surface   = core::Surface;
+    using Device    = core::Device;
+    using Swapchain = core::Swapchain;
     
     GLFWwindow* window = nullptr;
     int width = 800, height = 600;
@@ -44,6 +48,8 @@ protected:
     std::unique_ptr<Surface> surface;
 
     std::unique_ptr<Device> device;
+
+    std::unique_ptr<Swapchain> swapchain;
 private:
     VkDebugUtilsMessengerEXT debugMessenger{};
 };

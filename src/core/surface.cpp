@@ -8,13 +8,13 @@ namespace core {
             throw std::runtime_error("failed to create window surface");
         }
     }
-    
+
     Surface::~Surface() {
-        if (surface != VK_NULL_HANDLE) {
+        if (surface != VK_NULL_HANDLE && instance != VK_NULL_HANDLE) {
             vkDestroySurfaceKHR(instance, surface, nullptr);
         }
     }
-    
+
     VkSurfaceKHR Surface::getSurface() const {
         return surface;
     }
