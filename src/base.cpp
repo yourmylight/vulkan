@@ -6,6 +6,8 @@
 #include "core/surface.h"
 #include "core/device.h"
 #include "core/swapchain.h"
+#include "common/imageViewCreateInfo.h"
+#include "core/imageView.h"
 
 void Base::run() {
     setupWindow();
@@ -19,6 +21,9 @@ Base::Base(int _width, int _height) : width(_width), height(_height) {
 }
 
 Base::~Base() {
+    for (auto& imageView : swapchainImageViews) {
+        imageView.reset();
+    }
     swapchain.reset();
     device.reset();
     surface.reset();
@@ -43,6 +48,7 @@ void Base::initVulkan() {
     createSurface();
     createDevice();
     createSwapchain();
+    createSwapchainImageView();
 }
 
 void Base::setupWindow() {
@@ -93,4 +99,24 @@ void Base::createSwapchain() {
         surface->getSurface(),
         device->getQueueFamilyIndices()
     );
+}
+
+void Base::createSwapchainImageView() {
+    common::ImageViewCreateInfo createInfo {
+        .format = swapchain->getSwapchainImageFormat()
+    };
+
+    const size_t size = swapchain->getSwapchainImageCount();
+
+    std::vector<VkImage> images = swapchain->getImages();
+
+    swapchainImageViews.reserve(size);
+
+    for (size_t i = 0; i < size; i++) {
+        swapchainImageViews.emplace_back(std::make_unique<ImageView>(
+            device->getLogicalDevice(),
+            images[i],
+            createInfo
+        ));
+    }
 }

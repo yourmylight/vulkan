@@ -57,6 +57,16 @@ namespace core {
         if (vkCreateSwapchainKHR(logicalDevice, &swapchainCreateInfo, nullptr, &swapchain) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
+
+        uint32_t swapchainImageCount = 0;
+        vkGetSwapchainImagesKHR(logicalDevice, swapchain, &swapchainImageCount, nullptr);
+        if (swapchainImageCount) {
+            swapchainImages.resize(swapchainImageCount);
+            vkGetSwapchainImagesKHR(logicalDevice, swapchain, &swapchainImageCount, swapchainImages.data());
+        }
+
+        swapchainImageFormat = surfaceFormat.format;
+        swapchainExtent = extent;
     }
 
     Swapchain::~Swapchain() {
@@ -107,5 +117,17 @@ namespace core {
 
             return actualExtent;
         }
+    }
+
+    const VkFormat& Swapchain::getSwapchainImageFormat() const {
+        return swapchainImageFormat;
+    }
+
+    const size_t Swapchain::getSwapchainImageCount() const {
+        return swapchainImages.size();
+    }
+
+    const std::vector<VkImage>& Swapchain::getImages() const {
+        return swapchainImages;
     }
 }

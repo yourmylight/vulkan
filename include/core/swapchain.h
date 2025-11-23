@@ -18,6 +18,9 @@ namespace core {
             const QueueFamilyIndices& _queueFamilyIndices);
         ~Swapchain();
         VkSwapchainKHR getSwapchain() const;
+        const VkFormat& getSwapchainImageFormat() const;
+        const size_t getSwapchainImageCount() const;
+        const std::vector<VkImage>& getImages() const;
     private:
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
@@ -29,5 +32,8 @@ namespace core {
         VkSurfaceKHR surface{};
         QueueFamilyIndices queueFamilyIndices;
         VkSwapchainKHR swapchain{};
+        std::vector<VkImage> swapchainImages;
+        VkFormat swapchainImageFormat;
+        VkExtent2D swapchainExtent;
     };
 }
