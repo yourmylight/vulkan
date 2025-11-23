@@ -49,7 +49,7 @@ namespace core {
     }
 
     void Device::createLogicDevice() {
-        QueueFamilyIndices queueFamilyIndices = findQueueFamily(physicalDevice);
+        common::QueueFamilyIndices queueFamilyIndices = findQueueFamily(physicalDevice);
 
         std::set<uint32_t> uniqueQueueFamilyIndices {
             queueFamilyIndices.graphicFamily.value(),
@@ -93,12 +93,13 @@ namespace core {
     }
 
     bool Device::checkPhysicalDevice(const VkPhysicalDevice& device) {
-        QueueFamilyIndices queueFamilyIndices = findQueueFamily(device);
+        common::QueueFamilyIndices queueFamilyIndices = findQueueFamily(device);
 
         bool extensionSupport = checkDeviceExtensionSupport(device);
         bool swapchainAdequate = false;
         if (extensionSupport) {
-            SwapchainSupportDetails swapchainSupportDetails = SwapchainSupportDetails::querySwapchainSupport(device, surface);
+            common::SwapchainSupportDetails swapchainSupportDetails = 
+                common::SwapchainSupportDetails::querySwapchainSupport(device, surface);
             swapchainAdequate = 
                 !swapchainSupportDetails.formats.empty() && 
                 !swapchainSupportDetails.presentModes.empty();
@@ -107,11 +108,11 @@ namespace core {
         return queueFamilyIndices.isComplete() && extensionSupport && swapchainAdequate;
     }
 
-    QueueFamilyIndices Device::findQueueFamily(const VkPhysicalDevice& device) {
+    common::QueueFamilyIndices Device::findQueueFamily(const VkPhysicalDevice& device) {
         if (this->queueFamilyIndices.isComplete()) {
             return this->queueFamilyIndices;
         }
-        QueueFamilyIndices queueFamilyIndices{};
+        common::QueueFamilyIndices queueFamilyIndices{};
 
         uint32_t queueFamilyCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties2(device, &queueFamilyCount, nullptr);
@@ -163,7 +164,7 @@ namespace core {
         return deviceExtensions.empty();
     }
 
-    const QueueFamilyIndices& Device::getQueueFamilyIndices() const {
+    const common::QueueFamilyIndices& Device::getQueueFamilyIndices() const {
         return queueFamilyIndices;
     }
 }

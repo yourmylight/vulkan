@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.h>
 
-namespace core {
+namespace common {
     struct SwapchainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;

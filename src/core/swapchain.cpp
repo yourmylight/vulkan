@@ -5,12 +5,12 @@
 namespace core {
     Swapchain::Swapchain(
         GLFWwindow* _window, VkPhysicalDevice _physicalDevice, 
-        VkDevice _logicalDevice, VkSurfaceKHR _surface, const QueueFamilyIndices& _queueFamilyIndices) 
+        VkDevice _logicalDevice, VkSurfaceKHR _surface, const common::QueueFamilyIndices& _queueFamilyIndices) 
         : window(_window), physicalDevice(_physicalDevice), 
         logicalDevice(_logicalDevice), surface(_surface), queueFamilyIndices(_queueFamilyIndices)
     {
-        SwapchainSupportDetails swapchainSupportDetails = 
-            SwapchainSupportDetails::querySwapchainSupport(physicalDevice ,surface);
+        common::SwapchainSupportDetails swapchainSupportDetails = 
+            common::SwapchainSupportDetails::querySwapchainSupport(physicalDevice ,surface);
         
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapchainSupportDetails.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapchainSupportDetails.presentModes);

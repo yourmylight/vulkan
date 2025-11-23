@@ -15,7 +15,7 @@ namespace core {
             VkPhysicalDevice _physicalDevice, 
             VkDevice _logicalDevice, 
             VkSurfaceKHR _surface,
-            const QueueFamilyIndices& _queueFamilyIndices);
+            const common::QueueFamilyIndices& _queueFamilyIndices);
         ~Swapchain();
         VkSwapchainKHR getSwapchain() const;
         const VkFormat& getSwapchainImageFormat() const;
@@ -30,7 +30,7 @@ namespace core {
         VkPhysicalDevice physicalDevice{};
         VkDevice logicalDevice{};
         VkSurfaceKHR surface{};
-        QueueFamilyIndices queueFamilyIndices;
+        common::QueueFamilyIndices queueFamilyIndices;
         VkSwapchainKHR swapchain{};
         std::vector<VkImage> swapchainImages;
         VkFormat swapchainImageFormat;

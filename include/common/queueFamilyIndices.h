@@ -2,7 +2,7 @@
 
 #include <optional>
 
-namespace core {
+namespace common {
     struct QueueFamilyIndices {
         std::optional<uint32_t> graphicFamily;
         std::optional<uint32_t> presentFamily;

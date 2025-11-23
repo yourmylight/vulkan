@@ -13,7 +13,7 @@ namespace core {
         VkPhysicalDevice getPhysicalDevice() const;
 
         VkDevice getLogicalDevice() const;
-        const QueueFamilyIndices& getQueueFamilyIndices() const;
+        const common::QueueFamilyIndices& getQueueFamilyIndices() const;
     private:
         void pickPhysicalDevice();
 
@@ -21,7 +21,7 @@ namespace core {
 
         bool checkPhysicalDevice(const VkPhysicalDevice& device);
 
-        QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
+        common::QueueFamilyIndices findQueueFamily(const VkPhysicalDevice& device);
 
         bool checkDeviceExtensionSupport(const VkPhysicalDevice& device);
     private:
@@ -31,6 +31,6 @@ namespace core {
         VkDevice logicalDevice{};
         VkQueue graphicQueue{};
         VkQueue presentQueue{};
-        QueueFamilyIndices queueFamilyIndices{};
+        common::QueueFamilyIndices queueFamilyIndices{};
     };
 }
