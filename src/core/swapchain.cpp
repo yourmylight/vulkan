@@ -1,6 +1,6 @@
 #include "core/swapchain.h"
 #include "core/device.h"
-#include "core/swapchainSupportDetails.h"
+#include "common/swapchainSupportDetails.h"
 
 namespace core {
     Swapchain::Swapchain(

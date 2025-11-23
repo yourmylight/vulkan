@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "core/device.h"
-#include "core/swapchainSupportDetails.h"
+#include "common/swapchainSupportDetails.h"
 #include "config.h"
 
 namespace core {

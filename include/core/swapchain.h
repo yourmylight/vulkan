@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
-#include "core/queueFamilyIndices.h"
+#include "common/queueFamilyIndices.h"
 
 struct SwapchainSupportDetails;
 
