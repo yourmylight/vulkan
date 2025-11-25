@@ -7,7 +7,7 @@ namespace core {
     public:
         RenderPass(VkDevice _logicalDevice);
         ~RenderPass();
-        RenderPass& beginRenderPass(VkPipelineBindPoint bindPoint);
+        RenderPass& beginSubPass(VkPipelineBindPoint bindPoint);
         RenderPass& endSubpass();
         RenderPass& addAttachment(const VkAttachmentDescription& attachmentDes);
         RenderPass& addColorAttachment(uint32_t attachemnt, VkImageLayout layout);
