@@ -11,6 +11,10 @@ namespace core {
         RenderPass& endSubpass();
         RenderPass& addAttachment(const VkAttachmentDescription& attachmentDes);
         RenderPass& addColorAttachment(uint32_t attachemnt, VkImageLayout layout);
+        RenderPass& addResolveAttachment(uint32_t attachemnt, VkImageLayout layout);
+        RenderPass& addDepthAttachment(uint32_t attachemnt, VkImageLayout layout);
+        RenderPass& addInputAttachment(uint32_t attachemnt, VkImageLayout layout);
+        RenderPass& addPreserveAttachment(uint32_t attachemnt);
         void build(const std::vector<VkSubpassDependency>& subpassDependency);
     private:
         VkDevice logicalDevice{};
@@ -24,6 +28,6 @@ namespace core {
         std::vector<std::vector<VkAttachmentReference>> resolveRefsPerSubpass;
         std::vector<std::vector<uint32_t>> preserveRefsPerSubpass;
 
-        VkRenderPass renderPass;
+        VkRenderPass renderPass{};
     };
 }
