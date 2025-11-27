@@ -16,6 +16,7 @@ namespace core {
         RenderPass& addInputAttachment(uint32_t attachemnt, VkImageLayout layout);
         RenderPass& addPreserveAttachment(uint32_t attachemnt);
         void build(const std::vector<VkSubpassDependency>& subpassDependency);
+        VkRenderPass getRenderPass() const;
     private:
         VkDevice logicalDevice{};
         std::vector<VkAttachmentDescription> attachmentDescription;

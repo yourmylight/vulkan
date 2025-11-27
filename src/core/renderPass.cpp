@@ -37,7 +37,7 @@ namespace core {
         subpassDes.pResolveAttachments = 
             resolveRefsPerSubpass.back().empty() ? nullptr : resolveRefsPerSubpass.back().data();
         subpassDes.pDepthStencilAttachment = 
-            depthRefsPerSubpass.back() ? &depthRefsPerSubpass.back().value() : nullptr;
+            depthRefsPerSubpass.back().has_value() ? &depthRefsPerSubpass.back().value() : nullptr;
         subpassDes.preserveAttachmentCount = static_cast<uint32_t>(preserveRefsPerSubpass.back().size());
         subpassDes.pPreserveAttachments = 
             preserveRefsPerSubpass.back().empty() ? nullptr : preserveRefsPerSubpass.back().data();
@@ -90,5 +90,9 @@ namespace core {
         if (vkCreateRenderPass(logicalDevice, &createInfo, nullptr, &renderPass) != VK_SUCCESS) {
             throw std::runtime_error("failed to create renderPass");
         }
+    }
+
+    VkRenderPass RenderPass::getRenderPass() const { 
+        return renderPass;
     }
 }
