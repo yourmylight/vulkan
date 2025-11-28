@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "vulkanHeaders.h"
 #include "common/queueFamilyIndices.h"
 
 namespace core {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "core/vulkanHeaders.h"
 
 namespace common {
     struct SwapchainSupportDetails {

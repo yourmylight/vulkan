@@ -18,7 +18,7 @@ namespace core {
         return *this;
     }
 
-    Framebuffer& Framebuffer::setSize(uint32_t _width, uint32_t _height, uint32_t _layers = 1) {
+    Framebuffer& Framebuffer::setSize(uint32_t _width, uint32_t _height, uint32_t _layers) {
         width = _width;
         height = _height;
         layers = _layers;
