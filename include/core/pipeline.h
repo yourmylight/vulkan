@@ -6,6 +6,6 @@ namespace core {
         Pipeline();
         ~Pipeline();
     private:
-    
+        
     };
 }

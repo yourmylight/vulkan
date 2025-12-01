@@ -5,6 +5,7 @@ project(vulkan)
 set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB_RECURSE CORE_SOURCES "${PROJECT_SOURCE_DIR}/src/core/*.cpp")
+file(GLOB_RECURSE UTIL_SOURCES "${PROJECT_SOURCE_DIR}/src/core/*.cpp")
 
 add_executable(vulkan 
     src/main.cpp
@@ -12,6 +13,7 @@ add_executable(vulkan
     src/triangle.cpp
     src/debugUtils.cpp
     ${CORE_SOURCES}
+    ${UTIL_SOURCES}
 )
 
 find_package(glfw3 CONFIG REQUIRED)

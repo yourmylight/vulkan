@@ -120,3 +120,7 @@ void Base::createSwapchainImageView() {
         ));
     }
 }
+
+void Base::createPipeline() {
+    
+}
